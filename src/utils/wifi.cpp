@@ -1,6 +1,8 @@
 #include "wifi.h"
 #include "../comms/telegramBot.h"
 
+#define WIFI_CONFIG_PORTAL_TIMEOUT 120
+
 bool shouldSaveConfig;
 WiFiManagerParameter custom_bot_id("botid", "Bot Token", botToken, 50);
 
@@ -21,9 +23,15 @@ void initWifi(){
   }
   wifiManager.setSaveConfigCallback(saveConfigCallback);
   wifiManager.addParameter(&custom_bot_id);
+  wifiManager.setConfigPortalTimeout(WIFI_CONFIG_PORTAL_TIMEOUT);
+  wifiManager.setBreakAfterConfig(true);
 
-  //If it fails to connect it will create a TELEGRAM-BOT access point
-  wifiManager.autoConnect("TELEGRAM-BOT");
+  if(!wifiManager.autoConnect("TELEGRAM-BOT")){
+    Serial.println(F("Could not connect, resetting"));
+    delay(3000);
+    ESP.reset();
+    delay(5000);
+  }
 
   Serial.println(F("WiFi connected"));
   Serial.print(F("IP address: "));
