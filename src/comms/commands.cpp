@@ -19,6 +19,36 @@ char reply2[MAX_REPLY_LENGTH];
 char reply3[MAX_REPLY_LENGTH];
 char* replies[] = {reply1, reply2, reply3};
 
+void messageHandler(const char *message, int i);
+int8_t parseCommand(const char *message);
+void cmd_stats(int i);
+void cmd_geekstats(int i);
+void cmd_toggleLights(int i);
+void cmd_increaseBrightness(int i);
+void cmd_decreaseBrightness(int i);
+void cmd_toggleTimer(int i);
+void cmd_timeOfDay(int i);
+void cmd_unknown(int i);
+
+void messageHandler(const char *message, int i){
+  static void (*const cmd_jump_table[n_commands])(int) PROGMEM = {
+    cmd_stats, 
+    cmd_geekstats, 
+    cmd_toggleLights, 
+    cmd_increaseBrightness, 
+    cmd_decreaseBrightness, 
+    cmd_toggleTimer, 
+    cmd_timeOfDay, 
+  };
+  int8_t command = parseCommand(message);
+  if(command < 0 || command >= n_commands){
+    cmd_unknown(i);
+  }
+  else{
+    cmd_jump_table[command](i);
+  }
+}
+
 int8_t parseCommand(const char *message){
   if (message[0] == '/'){
     for(int i = n_commands-1; i >= 0; i--){
@@ -29,7 +59,6 @@ int8_t parseCommand(const char *message){
   }
   return -1;
 }
-
 
 void cmd_stats(int i){
   uint32_t time= timeClient.getEpochTime() - start_epoch_time;
@@ -102,25 +131,4 @@ void cmd_timeOfDay(int i){
 
 void cmd_unknown(int i){
   strcpy_P(replies[i],  (PGM_P)F("Command not understood"));
-}
-
-void messageHandler(const char *message, int i){
-  switch(parseCommand(message)){
-    case -1:     cmd_unknown(i);
-      break;
-    case 0:      cmd_stats(i);
-      break;
-    case 1:      cmd_geekstats(i);
-      break;
-    case 2:      cmd_toggleLights(i);
-      break;
-    case 3:      cmd_increaseBrightness(i);
-      break;
-    case 4:      cmd_decreaseBrightness(i);
-      break;
-    case 5:      cmd_toggleTimer(i);
-      break;
-    case 6:      cmd_timeOfDay(i);
-      break;
-  }
 }
