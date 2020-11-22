@@ -58,10 +58,10 @@ void cmd_geekstats(int i){
 
 void cmd_toggleLights(int i){
   if(toggleLights()){
-    strcpy_P(replies[i],(PGM_P)F("The lights are on! Fishy hide!"));
+    strcpy_P(replies[i],(PGM_P)F("It's bright!"));
   }
   else{
-    strcpy_P(replies[i],(PGM_P)F("It's dark, fishy can't see :("));
+    strcpy_P(replies[i],(PGM_P)F("It's dark!"));
   }
 }
 
@@ -69,7 +69,7 @@ void cmd_increaseBrightness(int i){
   adjustBrightness(1);
   snprintf_P(
     replies[i], MAX_REPLY_LENGTH,
-    (PGM_P)F("With %u%% brightness, you can see fishy and fishy can see you!"),
+    (PGM_P)F("The lights are increased to %u%%"),
     brightness/10
   );
 }
@@ -78,14 +78,14 @@ void cmd_decreaseBrightness(int i){
   adjustBrightness(0);
   snprintf_P(
     replies[i], MAX_REPLY_LENGTH,
-    (PGM_P)F("The lights are dimmed to %u%% and fishy likes it!"),
+    (PGM_P)F("The lights are dimmed to %u%%"),
     brightness/10
   );
 }
 
 void cmd_toggleTimer(int i){
   if(toggleTimer()){
-    strcpy_P(replies[i],(PGM_P)F("Fishy will enjoy a regular day-night cycle"));
+    strcpy_P(replies[i],(PGM_P)F("Timer mode active"));
   }
   else{
     strcpy_P(replies[i],(PGM_P)F("I'll follow your commands"));
@@ -101,7 +101,7 @@ void cmd_timeOfDay(int i){
 }
 
 void cmd_unknown(int i){
-  strcpy_P(replies[i],  (PGM_P)F("fishy no understand u :("));
+  strcpy_P(replies[i],  (PGM_P)F("Command not understood"));
 }
 
 void messageHandler(const char *message, int i){
