@@ -1,10 +1,10 @@
 #include "wifi.h"
 #include "../comms/telegramBot.h"
 
-#define WIFI_CONFIG_PORTAL_TIMEOUT 120
+#define WIFI_CONNECT_TIMEOUT 60
+#define WIFI_CONFIG_PORTAL_TIMEOUT 60
 
 bool shouldSaveConfig;
-WiFiManagerParameter custom_bot_id("botid", "Bot Token", botToken, 50);
 
 void saveConfigCallback () {
   Serial.println(F("Should save config"));
@@ -13,6 +13,8 @@ void saveConfigCallback () {
 
 void initWifi(){
   WiFiManager wifiManager;
+  WiFiManagerParameter custom_bot_id("botid", "Bot Token", botToken, 50);
+  
   Serial.println(F("Send r to reset settings..."));
   delay(2000);
   if (Serial.available()>0){
@@ -23,6 +25,7 @@ void initWifi(){
   }
   wifiManager.setSaveConfigCallback(saveConfigCallback);
   wifiManager.addParameter(&custom_bot_id);
+  wifiManager.setConnectTimeout(WIFI_CONNECT_TIMEOUT);
   wifiManager.setConfigPortalTimeout(WIFI_CONFIG_PORTAL_TIMEOUT);
   wifiManager.setBreakAfterConfig(true);
 
@@ -37,4 +40,8 @@ void initWifi(){
   Serial.print(F("IP address: "));
   IPAddress ip = WiFi.localIP();
   Serial.println(ip);
+
+  if(shouldSaveConfig){
+    strcpy(botToken, custom_bot_id.getValue());
+  }
 }

@@ -15,7 +15,6 @@ uint32_t bot_lasttime;   //last time messages' scan has been done
 
 void initBot(){
   if (shouldSaveConfig) {
-    strcpy(botToken, custom_bot_id.getValue());
     Serial.print(F("Saving bot token to EEPROM:\t"));
     Serial.println(botToken);
     EEPROM.put(address_offset, botToken);

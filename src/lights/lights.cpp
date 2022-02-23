@@ -114,8 +114,7 @@ void setTimedLights(float factor){
 }
 
 void updateLights(){
-  timeClient.update();
-  int mins = timeClient.getHours() * 60 + timeClient.getMinutes();
+  int mins = getDaySeconds() / 60UL;
 
   float factor = updateTimeOfDay(mins);
   if(timer_on){

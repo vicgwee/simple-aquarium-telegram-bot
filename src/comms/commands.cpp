@@ -61,7 +61,7 @@ int8_t parseCommand(const char *message){
 }
 
 void cmd_stats(int i){
-  uint32_t time= timeClient.getEpochTime() - start_epoch_time;
+  uint32_t time= getUptimeSeconds();
   uint32_t day = time / (24 * 3600);
   time = time % (24 * 3600);
   uint8_t hour = time / 3600;
@@ -122,6 +122,8 @@ void cmd_toggleTimer(int i){
 }
 
 void cmd_timeOfDay(int i){
+  initTimeClient();
+  updateLights();
   snprintf_P(
     replies[i], MAX_REPLY_LENGTH,
     (PGM_P)F("It's now %s and the lights are at %u%%"),
