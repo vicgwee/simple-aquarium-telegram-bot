@@ -1,7 +1,8 @@
 #include "wifi.h"
 #include "../comms/telegramBot.h"
 
-#define WIFI_CONFIG_PORTAL_TIMEOUT 120
+#define WIFI_CONNECT_TIMEOUT 60
+#define WIFI_CONFIG_PORTAL_TIMEOUT 60
 
 bool shouldSaveConfig;
 
@@ -24,6 +25,7 @@ void initWifi(){
   }
   wifiManager.setSaveConfigCallback(saveConfigCallback);
   wifiManager.addParameter(&custom_bot_id);
+  wifiManager.setConnectTimeout(WIFI_CONNECT_TIMEOUT);
   wifiManager.setConfigPortalTimeout(WIFI_CONFIG_PORTAL_TIMEOUT);
   wifiManager.setBreakAfterConfig(true);
 
